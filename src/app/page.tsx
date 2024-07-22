@@ -4,13 +4,10 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -18,19 +15,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { playgroundDefaultCode } from "@/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Editor, EditorProps, Monaco, useMonaco } from "@monaco-editor/react";
-import { log } from "console";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Editor, Monaco } from "@monaco-editor/react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { editor } from "monaco-editor";
 import { z } from "zod";
 import { editorLightTheme } from "@/config/monacoTheme";
-import { Separator } from "@/components/ui/separator";
+import { RequestResult } from "@/types/response";
 
 const formSchema = z.object({
   progLang: z.string(),
@@ -46,12 +41,19 @@ export default function Home() {
       codeToExecute: "",
     },
   });
-  // const monaco = useMonaco();
-
   const [codeResult, setCodeResult] = useState("");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+
+    // check if the programmig language is selected
+    if (values.progLang === "") {
+      return toast({
+        title: "Error",
+        description: "Please select a programming language",
+        variant: "destructive",
+      });
+    }
 
     const submitData = new FormData();
     submitData.append(
@@ -60,51 +62,57 @@ export default function Home() {
     );
     submitData.append("codeToExecute", values.codeToExecute);
 
-    const res = await fetch("http://localhost:63010/executor/run/java", {
-      method: "POST",
-      body: submitData,
-    });
-    toast({
-      title: "Error",
-      description: "An error occurred while running the code",
-      variant: "destructive",
-    });
-
-    if (!res.ok) {
-      toast({
+    let response = null;
+    try {
+      response = await fetch("http://localhost:63010/executor/playground/run", {
+        method: "POST",
+        body: submitData,
+      });
+    } catch (error) {
+      return toast({
         title: "Error",
-        description: "An error occurred while running the code",
+        description: "Internal server error. Please try again later",
         variant: "destructive",
       });
-    } else {
-      toast({
+    }
+
+    const result: RequestResult = await response.json();
+
+    // some problems with the server
+    if (result.code !== 1) {
+      return toast({
+        title: "Error",
+        description: "Internal server error. Please try again later",
+        variant: "destructive",
+      });
+    }
+
+    const { code: executionCode, content } = result.data;
+
+    setCodeResult(content);
+    if (executionCode === 1) {
+      // code executed successfully
+      return toast({
         title: "Success",
         description: "Code executed successfully",
         variant: "default",
       });
-      const result = await res.text();
-      setCodeResult(result);
+    } else {
+      return toast({
+        title: "Error",
+        description: "Code execution failed. Please check your code",
+        variant: "destructive",
+      });
     }
-
-    // setCodeResult(await res.json());
   }
 
   function handleEditorWillMount(monaco: Monaco) {
     monaco.editor.defineTheme("lightTheme", editorLightTheme);
-    monaco.editor.setTheme("lightTheme");
   }
 
-  // useEffect(() => {
-  //   monaco?.languages.typescript.javascriptDefaults.setEagerModelSync(true);
-  //   if (monaco) {
-  //     monaco.editor.defineTheme("lightTheme", editorLightTheme);
-  //     monaco.editor.setTheme("lightTheme");
-  //   }
-  // }, [monaco]);
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="flex flex-col space-y-8 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+    <div className="flex min-h-screen flex-col items-center justify-between p-24">
+      <div className="flex flex-col space-y-6 w-full max-w-5xl items-center justify-between  text-sm lg:flex">
         {/* introduction sectoin */}
         <section className="flex-center flex-col">
           <h1 className="text-18-bold">Mini Code Runner</h1>
@@ -148,8 +156,18 @@ export default function Home() {
                   </FormItem>
                 )}
               />
-              <div className="space-x-3">
-                <Button type="submit">Execute</Button>
+              <div className="space-x-3 items-end flex">
+                <Button
+                  type="submit"
+                  className="w-20"
+                  disabled={form.formState.isSubmitting}
+                >
+                  {form.formState.isSubmitting ? (
+                    <ReloadIcon className="animate-spin" />
+                  ) : (
+                    "Execute"
+                  )}
+                </Button>
                 <Button
                   type="button"
                   variant="outline"
@@ -170,7 +188,7 @@ export default function Home() {
                       theme="lightTheme"
                       options={{
                         minimap: { enabled: false },
-                        renderLineHighlight: "all",
+                        renderLineHighlight: "line",
                       }}
                       height="40vh"
                       language={form.getValues("progLang")}
@@ -192,10 +210,9 @@ export default function Home() {
             className="resize-none border-2 border-gray-400 h-[15vh]"
             disabled
             value={codeResult}
-            onChange={(e) => setCodeResult(e.target.value)}
           />
         </div>
       </div>
-    </main>
+    </div>
   );
 }
