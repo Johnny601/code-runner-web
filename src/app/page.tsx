@@ -27,6 +27,8 @@ import { z } from "zod";
 import { editorLightTheme } from "@/config/monacoTheme";
 import { RequestResult } from "@/types/response";
 
+const executorUrl = process.env.NEXT_PUBLIC_EXECUTOR_SERVICE;
+
 const formSchema = z.object({
   progLang: z.string(),
   codeToExecute: z.string(),
@@ -64,7 +66,7 @@ export default function Home() {
 
     let response = null;
     try {
-      response = await fetch("http://localhost:63010/executor/playground/run", {
+      response = await fetch(`${executorUrl}/playground/run`, {
         method: "POST",
         body: submitData,
       });

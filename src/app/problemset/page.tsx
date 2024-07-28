@@ -12,12 +12,19 @@ import { problemSet } from "@/constants/problemSet";
 import { cn } from "@/lib/utils";
 import { RequestResult } from "@/types/response";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
+const executorUrl = process.env.NEXT_PUBLIC_EXECUTOR_SERVICE;
+
 async function fetchDemoProblem() {
-  const response = await fetch("http://localhost:63010/executor/problemset", {
+  const cookieStore = cookies();
+  const response = await fetch(`${executorUrl}/problemset`, {
+    headers: {
+      Authorization: "Bearer " + cookieStore.get("jwt")?.value,
+    },
     cache: "no-store",
   });
   const result: RequestResult = await response.json();
@@ -41,10 +48,16 @@ export default async function ProblemSetPage() {
               href={`/problemset/${problem.pathname}`}
               key={`${problem.id}`}
             >
-              <Card className="w-[380px] hover:shadow-lg">
-                <CardHeader>
-                  <CardTitle>{problem.name}</CardTitle>
+              <Card className="w-[380px] hover:shadow-lg ">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                  <CardTitle className="text-xl">{problem.name}</CardTitle>
+                  {problem.solved && (
+                    <Badge id="123 m" variant="success" className="m-0">
+                      Solved
+                    </Badge>
+                  )}
                 </CardHeader>
+
                 <CardContent className="">
                   <div>
                     <Badge variant="outline">{problem.difficulty}</Badge>
