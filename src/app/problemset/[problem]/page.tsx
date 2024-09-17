@@ -1,9 +1,5 @@
 import { RequestResult } from "@/types/response";
-import { useEffect, useState } from "react";
 import ProblemSetCodeRunner from "@/components/ProblemSetCodeRunner";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { cookies } from "next/headers";
 
 const executorUrl = process.env.NEXT_PUBLIC_EXECUTOR_SERVICE;
@@ -26,11 +22,11 @@ export default async function ProblemPage({
   const jwt = cookieStore.get("jwt")?.value as string;
   const problem: ProblemDetails = await fetchProblem(params, jwt);
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-24">
+    <div className="flex h-[93vh] flex-col items-center justify-between p-10">
       <div className="flex flex-col space-y-6 w-full max-w-5xl items-center justify-between text-sm lg:flex">
         {/* introduction sectoin */}
         <section className="flex-center flex-col">
-          <h1 className="text-18-bold">{problem.problemName}</h1>
+          <h1 className="text-16-bold">{problem.problemName}</h1>
           <p>{problem.description}</p>
         </section>
         {/* code runner */}
@@ -41,7 +37,6 @@ export default async function ProblemPage({
           codeTemplate={problem.codeTemplate}
           credentials={jwt}
         />
-        {/* execution result */}
       </div>
     </div>
   );

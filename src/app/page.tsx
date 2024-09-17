@@ -39,15 +39,13 @@ export default function Home() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      progLang: "",
-      codeToExecute: "",
+      progLang: playgroundDefaultCode["java"].name,
+      codeToExecute: playgroundDefaultCode["java"].codeToExecute,
     },
   });
   const [codeResult, setCodeResult] = useState("");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-
     // check if the programmig language is selected
     if (values.progLang === "") {
       return toast({
@@ -113,20 +111,21 @@ export default function Home() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="flex flex-col space-y-6 w-full max-w-5xl items-center justify-between  text-sm lg:flex">
-        {/* introduction sectoin */}
-        <section className="flex-center flex-col">
-          <h1 className="text-18-bold">Mini Code Runner</h1>
-          <p>Execute code in any language you like</p>
-        </section>
-        {/* form */}
+    <div className="h-[93vh] max-w-5xl mx-auto grid grid-rows-8 gap-4 text-sm">
+      {/* introduction sectoin */}
+      <div className="row-span-1  flex-col flex-center mt-6">
+        <h1 className="text-[16px] font-bold">Mini Code Runner</h1>
+        <p>Execute code in any language you like</p>
+      </div>
+      {/* form */}
+      <div className="row-span-4">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 w-full"
+            className="flex flex-col h-full"
           >
-            <div className="flex-between">
+            {/* button set */}
+            <div className="flex-between pb-4">
               <FormField
                 control={form.control}
                 name="progLang"
@@ -184,7 +183,7 @@ export default function Home() {
               control={form.control}
               name="codeToExecute"
               render={({ field }) => (
-                <FormItem className="border-4">
+                <FormItem className="border-2 w-full flex-1">
                   <FormControl>
                     <Editor
                       theme="lightTheme"
@@ -192,7 +191,6 @@ export default function Home() {
                         minimap: { enabled: false },
                         renderLineHighlight: "line",
                       }}
-                      height="40vh"
                       language={form.getValues("progLang")}
                       defaultLanguage={form.getValues("progLang")}
                       value={field.value}
@@ -206,14 +204,15 @@ export default function Home() {
             />
           </form>
         </Form>
-        <div className="w-full space-y-2">
-          <h2 className="text-14-medium">Result</h2>
-          <Textarea
-            className="resize-none border-2 border-gray-400 h-[15vh]"
-            disabled
-            value={codeResult}
-          />
-        </div>
+      </div>
+      {/* execution result */}
+      <div className="flex flex-col w-full row-span-2">
+        <h2 className="text-14-medium pb-2">Result</h2>
+        <Textarea
+          className="resize-none border-2 border-gray-300 flex-1 rounded-none"
+          disabled
+          value={codeResult}
+        />
       </div>
     </div>
   );

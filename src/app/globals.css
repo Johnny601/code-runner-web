@@ -29,6 +29,10 @@
     @apply text-[18px] leading-[24px] font-bold;
   }
 
+  .text-16-bold {
+    @apply text-[16px] leading-[24px] font-bold;
+  }
+
   .text-16-semibold {
     @apply text-[16px] leading-[20px] font-semibold;
   }

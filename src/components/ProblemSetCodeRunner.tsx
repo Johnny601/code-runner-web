@@ -26,7 +26,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Badge } from "./ui/badge";
 import { Textarea } from "./ui/textarea";
 
-const executorUrl = process.env.EXECUTOR_SERVICE;
+const executorUrl = process.env.NEXT_PUBLIC_EXECUTOR_SERVICE;
 
 interface ProblemSetCodeRunnerProps {
   setProblemName: React.Dispatch<React.SetStateAction<string>>;
@@ -95,11 +95,7 @@ export default function ProblemSetCodeRunner({
 
     const data: ProblemDetails = result.data;
 
-    // setProblemName(data.problemName);
-    // setProblemDescription(data.description);
     form.setValue("codeToExecute", data.codeTemplate);
-
-    // console.log(data);
   };
 
   function onSelectChange(value: string) {
@@ -108,8 +104,6 @@ export default function ProblemSetCodeRunner({
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-
     // check if the programming language is selected
     if (values.progLang === "") {
       return toast({
@@ -162,11 +156,6 @@ export default function ProblemSetCodeRunner({
   function handleEditorWillMount(monaco: Monaco) {
     monaco.editor.defineTheme("lightTheme", editorLightTheme);
   }
-
-  // useEffect(() => {
-  //   fetchProblemCodeTemplate();
-  //   console.log("fetching data");
-  // }, []);
 
   return (
     <div className="w-full space-y-6">
@@ -225,7 +214,7 @@ export default function ProblemSetCodeRunner({
             control={form.control}
             name="codeToExecute"
             render={({ field }) => (
-              <FormItem className="border-4">
+              <FormItem className="border-2">
                 <FormControl>
                   <Editor
                     theme="lightTheme"

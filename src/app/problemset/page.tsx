@@ -17,7 +17,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const executorUrl = process.env.NEXT_PUBLIC_EXECUTOR_SERVICE;
+const executorUrl = process.env.EXECUTOR_SERVICE;
 
 async function fetchDemoProblem() {
   const cookieStore = cookies();
@@ -36,10 +36,10 @@ export default async function ProblemSetPage() {
   const demoProblems: DemoProblem[] = await fetchDemoProblem();
 
   return (
-    <div className="flex flex-col min-h-screen items-center p-24 border-2">
+    <div className="flex flex-col h-[93vh] items-center p-24 border-2">
       <div className="w-full max-w-5xl space-y-16 text-sm ">
         <section className="flex-center flex-col">
-          <h1 className="text-18-bold">Programming Exercises</h1>
+          <h1 className="text-16-bold">Programming Exercises</h1>
           <p>Pick one to solve</p>
         </section>
         <div className="flex flex-col gap-4 items-center justify-between  ">
