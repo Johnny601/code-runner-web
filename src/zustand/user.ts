@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 interface UserState {
-  isLoggedIn: boolean;
+  isLoggedIn: boolean | null;
   login: () => void;
   logout: () => void;
 }
@@ -10,13 +10,12 @@ interface UserState {
 export const useUserStore = create(
   persist<UserState>(
     (set) => ({
-      isLoggedIn: false,
+      isLoggedIn: null,
       login: () => set({ isLoggedIn: true }),
       logout: () => set({ isLoggedIn: false }),
     }),
     {
       name: "user-storage",
-      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );

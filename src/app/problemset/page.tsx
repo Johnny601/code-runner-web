@@ -25,7 +25,7 @@ async function fetchDemoProblem() {
     headers: {
       Authorization: "Bearer " + cookieStore.get("jwt")?.value,
     },
-    cache: "no-store",
+    next: { revalidate: 0 },
   });
   const result: RequestResult = await response.json();
 
@@ -52,7 +52,7 @@ export default async function ProblemSetPage() {
                 <CardHeader className="flex flex-row items-center justify-between space-y-0">
                   <CardTitle className="text-xl">{problem.name}</CardTitle>
                   {problem.solved && (
-                    <Badge id="123 m" variant="success" className="m-0">
+                    <Badge variant="success" className="m-0">
                       Solved
                     </Badge>
                   )}

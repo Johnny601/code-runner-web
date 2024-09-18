@@ -51,6 +51,7 @@ export default function LoginForm() {
     },
   });
 
+  // login with username and password
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const submitData = new FormData();
     submitData.append("oAuth2Id", "");
@@ -77,6 +78,7 @@ export default function LoginForm() {
     router.push("/problemset");
   }
 
+  // login with OAuth
   useEffect(() => {
     const loginInWithOAuth = async () => {
       if (authId && authType) {
@@ -100,12 +102,14 @@ export default function LoginForm() {
           });
         }
 
-        router.push("/problemset");
+        login();
+
+        router.replace("/problemset");
       }
     };
 
     loginInWithOAuth();
-  }, [authId, authType, router, toast]);
+  }, [authId, authType, login, router, toast]);
 
   return (
     <div>
@@ -136,7 +140,7 @@ export default function LoginForm() {
                 <FormItem>
                   <div className="flex-between  ">
                     <FormLabel>Password</FormLabel>
-                    <p className="underline">Forgot your password?</p>
+                    <p className="underline invisible">Forgot your password?</p>
                   </div>
 
                   <FormControl>
@@ -151,7 +155,7 @@ export default function LoginForm() {
           <Button type="submit" className="w-full">
             Login
           </Button>
-          <p className="mt-4 text-12-semibold text-center">
+          <p className="mt-4 text-12-semibold text-center invisible">
             Don't have an account?{" "}
             <span className="underline">Sign Up Now</span>
           </p>
@@ -161,9 +165,12 @@ export default function LoginForm() {
       <Separator className="my-6 " />
       {/* OAuth login */}
       <div className="flex flex-col space-y-4">
-        <Link href={`${authUrl}/oauth2/authorization/github`}>
+        <Link
+          href={`${authUrl}/oauth2/authorization/github`}
+          className=" invisible"
+        >
           <Button variant="outline" className="w-full rounded-lg">
-            <FcGoogle className="h-4 w-4 mr-2" />
+            <FcGoogle className="h-4 w-4 mr-2 " />
             Login with Google
           </Button>
         </Link>

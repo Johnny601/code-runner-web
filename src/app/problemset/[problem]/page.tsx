@@ -1,14 +1,16 @@
 import { RequestResult } from "@/types/response";
 import ProblemSetCodeRunner from "@/components/ProblemSetCodeRunner";
 import { cookies } from "next/headers";
+import next from "next";
 
 const executorUrl = process.env.NEXT_PUBLIC_EXECUTOR_SERVICE;
 
 const fetchProblem = async (param: { problem: string }, jwt: string) => {
   const response = await fetch(
     `${executorUrl}/problemset/${param.problem}/PYTHON`,
-    { headers: { Authorization: "Bearer " + jwt } }
+    { headers: { Authorization: "Bearer " + jwt }, next: { revalidate: 0 } }
   );
+
   const result: RequestResult = await response.json();
 
   return result.data;
@@ -20,6 +22,8 @@ export default async function ProblemPage({
 }) {
   const cookieStore = cookies();
   const jwt = cookieStore.get("jwt")?.value as string;
+  console.log(jwt);
+
   const problem: ProblemDetails = await fetchProblem(params, jwt);
   return (
     <div className="flex h-[93vh] flex-col items-center justify-between p-10">

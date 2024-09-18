@@ -6,6 +6,7 @@ export function middleware(request: NextRequest) {
 
   // return to login page if user is not logged in
   if (!currentUser) {
+    console.log("User is not authenticated");
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
