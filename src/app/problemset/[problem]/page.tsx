@@ -22,8 +22,6 @@ export default async function ProblemPage({
 }) {
   const cookieStore = cookies();
   const jwt = cookieStore.get("jwt")?.value as string;
-  console.log(jwt);
-
   const problem: ProblemDetails = await fetchProblem(params, jwt);
   return (
     <div className="flex h-[93vh] flex-col items-center justify-between p-10">
