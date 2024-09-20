@@ -75,7 +75,7 @@ export default function LoginForm() {
 
     login();
 
-    router.push("/problemset");
+    window.location.href = "/problemset";
   }
 
   // login with OAuth
