@@ -104,7 +104,7 @@ export default function LoginForm() {
 
         login();
 
-        router.replace("/problemset");
+        window.location.href = "/problemset";
       }
     };
 
