@@ -86,7 +86,7 @@ export default function LoginForm() {
         submitData.append("oAuth2Id", authId);
         submitData.append("username", "");
         submitData.append("authType", authType);
-        submitData.append("password", "");
+        submitData.append("password", authId);
         const response = await fetch(`${authUrl}/login/authenticate`, {
           method: "POST",
           body: submitData,
