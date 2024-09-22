@@ -39,8 +39,8 @@ export default function Home() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      progLang: playgroundDefaultCode["java"].name,
-      codeToExecute: playgroundDefaultCode["java"].codeToExecute,
+      progLang: playgroundDefaultCode["python"].name,
+      codeToExecute: playgroundDefaultCode["python"].codeToExecute,
     },
   });
   const [codeResult, setCodeResult] = useState("");
