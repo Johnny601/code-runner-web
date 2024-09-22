@@ -165,10 +165,7 @@ export default function LoginForm() {
       <Separator className="my-6 " />
       {/* OAuth login */}
       <div className="flex flex-col space-y-4">
-        <Link
-          href={`${authUrl}/oauth2/authorization/github`}
-          className=" invisible"
-        >
+        <Link href={`${authUrl}/oauth2/authorization/google`}>
           <Button variant="outline" className="w-full rounded-lg">
             <FcGoogle className="h-4 w-4 mr-2 " />
             Login with Google

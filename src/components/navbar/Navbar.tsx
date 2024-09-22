@@ -11,7 +11,7 @@ export default function Navbar() {
   // const router = useRouter();
   return (
     <nav className="h-[7vh] w-full  border-b-2">
-      <div className="max-w-5xl mx-auto flex items-center justify-between h-full">
+      <div className="max-w-5xl mx-auto flex items-center justify-between h-full px-6 lg:px-0">
         <div className="flex items-center space-x-24">
           <Link href="/" className="text-18-bold">
             Evweet.com

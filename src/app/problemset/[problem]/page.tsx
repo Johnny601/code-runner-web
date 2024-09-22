@@ -24,8 +24,8 @@ export default async function ProblemPage({
   const jwt = cookieStore.get("jwt")?.value as string;
   const problem: ProblemDetails = await fetchProblem(params, jwt);
   return (
-    <div className="flex h-[93vh] flex-col items-center justify-between p-10">
-      <div className="flex flex-col space-y-6 w-full max-w-5xl items-center justify-between text-sm lg:flex">
+    <div className="flex h-[93vh] flex-col items-center p-10">
+      <div className="flex flex-col space-y-6 w-full max-w-5xl items-center text-sm lg:flex">
         {/* introduction sectoin */}
         <section className="flex-center flex-col">
           <h1 className="text-16-bold">{problem.problemName}</h1>
