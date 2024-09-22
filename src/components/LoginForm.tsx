@@ -21,7 +21,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { useUserStore } from "@/zustand/user";
@@ -109,7 +109,16 @@ export default function LoginForm() {
     };
 
     loginInWithOAuth();
-  }, [authId, authType, login, router, toast]);
+  }, [authId, authType, login, toast]);
+
+  // temporary measure to prevent user from going back to the previous page after logout
+  // should have a better implementation to invalidate the JWT in the backend using a blacklist through redis
+  useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = function () {
+      window.history.go(1);
+    };
+  }, []);
 
   return (
     <div>

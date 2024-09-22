@@ -44,8 +44,7 @@ export default function UserLoginStatus() {
 
     logout();
 
-    // full page reload to ensure the user cannot access the previous page
-    window.location.href = "/";
+    router.push("/login");
   }
 
   return (
