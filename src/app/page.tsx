@@ -149,8 +149,8 @@ export default function Home() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="java">Java</SelectItem>
                         <SelectItem value="python">Python</SelectItem>
+                        <SelectItem value="java">Java</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
